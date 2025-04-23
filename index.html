@@ -1,0 +1,2745 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Âm Nhạc Đương Đại</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Dancing+Script:wght@700&display=swap');
+
+        :root {
+            --primary-color: #8e44ad;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --text-color: #2c3e50;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--text-color);
+            background-color: #f9f9f9;
+            overflow-x: hidden;
+        }
+
+        /* Header Styles */
+        header {
+            height: 100vh;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .music-notes {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+
+        .note {
+            position: absolute;
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 2rem;
+            animation: float 15s linear infinite;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-20vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            padding: 0 20px;
+        }
+
+        h1 {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            animation: fadeInDown 1.5s ease-out;
+        }
+
+        .header-subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            font-weight: 300;
+            animation: fadeInUp 1.5s ease-out;
+        }
+
+        .scroll-down {
+            position: absolute;
+            bottom: 30px;
+            font-size: 2rem;
+            animation: bounce 2s infinite;
+            cursor: pointer;
+            color: white;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-20px);
+            }
+            60% {
+                transform: translateY(-10px);
+            }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Navigation */
+        nav {
+            background-color: white;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        nav.scrolled {
+            padding: 10px 0;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 15px 20px;
+        }
+
+        .logo {
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.8rem;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin-left: 30px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 600;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background-color: var(--primary-color);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text-color);
+            cursor: pointer;
+        }
+
+        /* Main Content */
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 50px 20px;
+        }
+
+        section {
+            margin-bottom: 80px;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            color: var(--primary-color);
+            position: relative;
+            display: inline-block;
+        }
+
+        h2::after {
+            content: '';
+            position: absolute;
+            width: 50%;
+            height: 3px;
+            bottom: -10px;
+            left: 0;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+        }
+
+        p {
+            line-height: 1.8;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+
+        /* Definition Sections */
+        .definition-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .definition-card {
+            flex: 1 1 400px;
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .definition-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .definition-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: var(--secondary-color);
+        }
+
+        .definition-card ul {
+            list-style-position: inside;
+            margin-left: 10px;
+        }
+
+        .definition-card li {
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+
+        /* Artists Section */
+        .artists-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .artist-card {
+            flex: 1 1 300px;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .artist-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .artist-img {
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .artist-img::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.7));
+        }
+
+        .artist-img-1 {
+            background-image: url('/placeholder.svg?height=400&width=600');
+        }
+
+        .artist-img-2 {
+            background-image: url('/placeholder.svg?height=400&width=600');
+        }
+
+        .artist-img-3 {
+            background-image: url('/placeholder.svg?height=400&width=600');
+        }
+
+        .artist-name {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+        }
+
+        .artist-info {
+            padding: 20px;
+        }
+
+        .artist-title {
+            font-size: 1rem;
+            color: var(--accent-color);
+            margin-bottom: 15px;
+        }
+
+        .artist-desc {
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .artist-works {
+            margin-top: 15px;
+            font-weight: 600;
+        }
+
+        .artist-works span {
+            display: inline-block;
+            background-color: var(--light-color);
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin: 5px 5px 5px 0;
+        }
+
+        /* Fusion Section */
+        .fusion-container {
+            background: linear-gradient(135deg, #f6d365, #fda085);
+            border-radius: 10px;
+            padding: 40px;
+            color: var(--dark-color);
+            margin-top: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .fusion-container h3 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: var(--dark-color);
+        }
+
+        /* Technology Section */
+        .tech-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .tech-card {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tech-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .tech-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--primary-color), var(--secondary-color));
+        }
+
+        .tech-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
+
+        .tech-card ul {
+            list-style-type: none;
+        }
+
+        .tech-card li {
+            margin-bottom: 10px;
+            padding-left: 20px;
+            position: relative;
+            line-height: 1.6;
+        }
+
+        .tech-card li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: var(--secondary-color);
+        }
+
+        /* Global Music Section */
+        .global-music {
+            background-color: var(--light-color);
+            border-radius: 10px;
+            padding: 40px;
+            margin-top: 40px;
+        }
+
+        .music-types {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .music-type {
+            flex: 1 1 300px;
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .music-type:hover {
+            transform: scale(1.03);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .music-type h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+
+        /* Social Role Section */
+        .social-role {
+            background: linear-gradient(135deg, #a8edea, #fed6e3);
+            border-radius: 10px;
+            padding: 40px;
+            margin-top: 40px;
+            color: var(--dark-color);
+        }
+
+        .social-role h3 {
+            font-size: 1.5rem;
+            margin: 20px 0 15px;
+            color: var(--dark-color);
+        }
+
+        /* Audio Player */
+        .audio-section {
+            margin-top: 60px;
+            text-align: center;
+        }
+
+        .audio-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .audio-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
+
+        .audio-player {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .playlist {
+            list-style: none;
+            text-align: left;
+        }
+
+        .playlist li {
+            padding: 10px 15px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .playlist li:hover {
+            background-color: #f5f5f5;
+        }
+
+        .playlist li.active {
+            background-color: #e6f7ff;
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .playlist-icon {
+            margin-right: 10px;
+            font-size: 1.2rem;
+            color: var(--primary-color);
+        }
+
+        /* Footer */
+        footer {
+            background: linear-gradient(135deg, var(--dark-color), #1a252f);
+            color: white;
+            padding: 50px 0 20px;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .footer-logo {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            margin-bottom: 30px;
+        }
+
+        .footer-links li {
+            margin: 0 15px;
+        }
+
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--secondary-color);
+        }
+
+        .social-icons {
+            margin-bottom: 30px;
+        }
+
+        .social-icons a {
+            display: inline-block;
+            margin: 0 10px;
+            color: white;
+            font-size: 1.5rem;
+            transition: transform 0.3s ease, color 0.3s ease;
+        }
+
+        .social-icons a:hover {
+            transform: translateY(-5px);
+            color: var(--secondary-color);
+        }
+
+        .copyright {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 3rem;
+            }
+
+            .header-subtitle {
+                font-size: 1.2rem;
+            }
+
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background-color: white;
+                flex-direction: column;
+                padding: 20px;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .nav-links li {
+                margin: 10px 0;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .definition-card, .artist-card, .tech-card {
+                flex: 1 1 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            h2 {
+                font-size: 2rem;
+            }
+
+            .header-subtitle {
+                font-size: 1rem;
+            }
+
+            .definition-container, .artists-container, .tech-container {
+                gap: 20px;
+            }
+
+            .fusion-container, .global-music, .social-role {
+                padding: 25px;
+            }
+        }
+
+        /* NEW STYLES FOR ADDED SECTIONS */
+
+        /* Playlist Section */
+        .playlist-section {
+            margin-top: 80px;
+        }
+
+        .playlist-tabs {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 30px;
+            overflow-x: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary-color) #f1f1f1;
+        }
+
+        .playlist-tabs::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .playlist-tabs::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .playlist-tabs::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 10px;
+        }
+
+        .playlist-tab {
+            padding: 12px 20px;
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-color);
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .playlist-tab.active {
+            color: var(--primary-color);
+            border-bottom: 3px solid var(--primary-color);
+        }
+
+        .playlist-tab:hover:not(.active) {
+            color: var(--secondary-color);
+        }
+
+        .playlist-content {
+            display: none;
+        }
+
+        .playlist-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .playlist-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 25px;
+        }
+
+        .playlist-item {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .playlist-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .playlist-cover {
+            height: 180px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .playlist-cover::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.7));
+        }
+
+        .playlist-play {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.8);
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 1.5rem;
+            opacity: 0;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            backdrop-filter: blur(5px);
+        }
+
+        .playlist-item:hover .playlist-play {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .playlist-info {
+            padding: 20px;
+        }
+
+        .playlist-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--text-color);
+        }
+
+        .playlist-source {
+            font-size: 0.9rem;
+            color: var(--accent-color);
+            display: flex;
+            align-items: center;
+        }
+
+        .playlist-source i {
+            margin-right: 5px;
+        }
+
+        /* Charts Section */
+        .charts-section {
+            margin-top: 80px;
+        }
+
+        .chart-container {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-top: 30px;
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .chart-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .chart-source {
+            font-size: 0.9rem;
+            color: var(--accent-color);
+        }
+
+        .chart-list {
+            list-style: none;
+        }
+
+        .chart-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+            transition: transform 0.3s ease;
+        }
+
+        .chart-item:hover {
+            transform: translateX(10px);
+        }
+
+        .chart-rank {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            width: 50px;
+            text-align: center;
+        }
+
+        .chart-song-info {
+            flex: 1;
+            margin-left: 15px;
+        }
+
+        .chart-song-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .chart-song-artist {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .chart-song-trend {
+            margin-left: 20px;
+            font-size: 1.2rem;
+        }
+
+        .trend-up {
+            color: #2ecc71;
+        }
+
+        .trend-down {
+            color: #e74c3c;
+        }
+
+        .trend-same {
+            color: #95a5a6;
+        }
+
+        /* News Section */
+        .news-section {
+            margin-top: 80px;
+        }
+
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .news-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .news-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .news-img {
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .news-content {
+            padding: 20px;
+        }
+
+        .news-date {
+            font-size: 0.8rem;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .news-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--text-color);
+        }
+
+        .news-excerpt {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .news-source {
+            font-size: 0.8rem;
+            color: var(--accent-color);
+            display: flex;
+            align-items: center;
+        }
+
+        .news-source i {
+            margin-right: 5px;
+        }
+
+        .news-read-more {
+            display: inline-block;
+            margin-top: 15px;
+            color: var(--primary-color);
+            font-weight: 600;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .news-read-more:hover {
+            color: var(--secondary-color);
+        }
+
+        /* Interview Section */
+        .interview-section {
+            margin-top: 80px;
+        }
+
+        .interview-container {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-top: 30px;
+        }
+
+        .interview-video {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+            height: 0;
+            overflow: hidden;
+        }
+
+        .interview-video iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .interview-info {
+            padding: 20px;
+        }
+
+        .interview-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--text-color);
+        }
+
+        .interview-desc {
+            font-size: 1rem;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* Reviews Section */
+        .reviews-section {
+            margin-top: 80px;
+        }
+
+        .reviews-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .review-card {
+            flex: 1 1 400px;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .review-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .review-header {
+            padding: 20px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+        }
+
+        .review-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .review-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .review-source {
+            font-size: 0.9rem;
+        }
+
+        .review-rating {
+            display: flex;
+            align-items: center;
+        }
+
+        .review-stars {
+            color: #f1c40f;
+            margin-right: 5px;
+        }
+
+        .review-content {
+            padding: 20px;
+        }
+
+        .review-text {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .review-read-more {
+            display: inline-block;
+            color: var(--primary-color);
+            font-weight: 600;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .review-read-more:hover {
+            color: var(--secondary-color);
+        }
+
+        /* Forum Section */
+        .forum-section {
+            margin-top: 80px;
+        }
+
+        .forum-container {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-top: 30px;
+        }
+
+        .forum-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .forum-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .forum-button {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .forum-button:hover {
+            background: var(--secondary-color);
+        }
+
+        .forum-topics {
+            list-style: none;
+        }
+
+        .forum-topic {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            transition: background-color 0.3s ease;
+        }
+
+        .forum-topic:hover {
+            background-color: #f9f9f9;
+        }
+
+        .topic-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .topic-title {
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .topic-meta {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .topic-author {
+            margin-right: 15px;
+        }
+
+        .topic-preview {
+            font-size: 0.9rem;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .forum-more {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .forum-more-link {
+            display: inline-block;
+            color: var(--primary-color);
+            font-weight: 600;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .forum-more-link:hover {
+            color: var(--secondary-color);
+        }
+
+        /* Quiz Section */
+        .quiz-section {
+            margin-top: 80px;
+        }
+
+        .quiz-container {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-top: 30px;
+        }
+
+        .quiz-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .quiz-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .quiz-description {
+            font-size: 1rem;
+            color: #666;
+        }
+
+        .quiz-question {
+            margin-bottom: 30px;
+        }
+
+        .question-text {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--text-color);
+        }
+
+        .quiz-options {
+            list-style: none;
+        }
+
+        .quiz-option {
+            padding: 15px;
+            margin-bottom: 10px;
+            border: 2px solid #eee;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .quiz-option:hover {
+            border-color: var(--primary-color);
+            background-color: #f9f9f9;
+        }
+
+        .quiz-option.selected {
+            border-color: var(--primary-color);
+            background-color: rgba(142, 68, 173, 0.1);
+        }
+
+        .quiz-option.correct {
+            border-color: #2ecc71;
+            background-color: rgba(46, 204, 113, 0.1);
+        }
+
+        .quiz-option.incorrect {
+            border-color: #e74c3c;
+            background-color: rgba(231, 76, 60, 0.1);
+        }
+
+        .quiz-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        .quiz-button {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .quiz-button:hover {
+            background: var(--secondary-color);
+        }
+
+        .quiz-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .quiz-result {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+            display: none;
+        }
+
+        .result-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+
+        .result-score {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--accent-color);
+        }
+
+        .result-message {
+            font-size: 1rem;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        /* Mood Music Section */
+        .mood-section {
+            margin-top: 80px;
+        }
+
+        .mood-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .mood-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .mood-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .mood-img {
+            height: 150px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .mood-img::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.7));
+        }
+
+        .mood-title {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            color: white;
+            font-size: 1.3rem;
+            font-weight: 600;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+        }
+
+        .mood-info {
+            padding: 20px;
+        }
+
+        .mood-description {
+            font-size: 0.9rem;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .mood-songs {
+            font-size: 0.9rem;
+            color: var(--primary-color);
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 3rem;
+            }
+
+            .header-subtitle {
+                font-size: 1.2rem;
+            }
+
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background-color: white;
+                flex-direction: column;
+                padding: 20px;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .nav-links li {
+                margin: 10px 0;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .definition-card, .artist-card, .tech-card {
+                flex: 1 1 100%;
+            }
+
+            .playlist-grid, .news-grid, .mood-container {
+                grid-template-columns: repeat(auto-fill, minmax(100%, 1fr));
+            }
+
+            .review-card {
+                flex: 1 1 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            h2 {
+                font-size: 2rem;
+            }
+
+            .header-subtitle {
+                font-size: 1rem;
+            }
+
+            .definition-container, .artists-container, .tech-container {
+                gap: 20px;
+            }
+
+            .fusion-container, .global-music, .social-role {
+                padding: 25px;
+            }
+
+            .chart-rank {
+                font-size: 1.2rem;
+                width: 40px;
+            }
+
+            .chart-song-title {
+                font-size: 0.9rem;
+            }
+
+            .chart-song-artist {
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="music-notes" id="musicNotes"></div>
+        <div class="header-content">
+            <h1>Âm Nhạc Đương Đại</h1>
+            <p class="header-subtitle">Khám phá thế giới âm nhạc đa dạng và không ngừng phát triển</p>
+        </div>
+        <div class="scroll-down" id="scrollDown">
+            <i class="fas fa-chevron-down"></i>
+        </div>
+    </header>
+
+    <nav id="mainNav">
+        <div class="nav-container">
+            <a href="#" class="logo">Âm Nhạc</a>
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#definition">Định Nghĩa</a></li>
+                <li><a href="#artists">Nghệ Sĩ</a></li>
+                <li><a href="#fusion">Fusion</a></li>
+                <li><a href="#technology">Công Nghệ</a></li>
+                <li><a href="#global">Toàn Cầu</a></li>
+                <li><a href="#social">Xã Hội</a></li>
+                <li><a href="#playlists">Playlists</a></li>
+                <li><a href="#charts">BXH</a></li>
+                <li><a href="#quiz">Trắc Nghiệm</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main>
+        <section id="definition" class="definition-section">
+            <h2>Âm Nhạc Đương Đại Là Gì?</h2>
+            <p>Âm nhạc đương đại là một khái niệm rộng, có thể được hiểu theo nhiều cách khác nhau tùy thuộc vào bối cảnh. Dưới đây là hai cách hiểu phổ biến về âm nhạc đương đại:</p>
+            
+            <div class="definition-container">
+                <div class="definition-card">
+                    <h3>Trong bối cảnh âm nhạc cổ điển</h3>
+                    <ul>
+                        <li>Đây là dòng nhạc được phát triển từ âm nhạc cổ điển truyền thống, bao gồm các tác phẩm viết cho dàn nhạc giao hưởng, hòa tấu, độc tấu nhạc cụ hoặc hợp xướng.</li>
+                        <li>Thời kỳ âm nhạc đương đại trong bối cảnh này thường được xem là bắt đầu từ cuối thế kỷ 20 đến nay.</li>
+                        <li>Nó bao gồm nhiều phong cách đa dạng như âm nhạc hậu hiện đại, âm nhạc phổ, âm nhạc tối giản, âm nhạc điện thanh, âm nhạc ngẫu nhiên,...</li>
+                        <li>Các nhạc sĩ trong lĩnh vực này thường tìm kiếm những cách thể hiện mới, đôi khi phá vỡ các quy tắc hòa âm, giai điệu và cấu trúc truyền thống.</li>
+                    </ul>
+                </div>
+                
+                <div class="definition-card">
+                    <h3>Trong bối cảnh âm nhạc phổ thông</h3>
+                    <ul>
+                        <li>Trong trường hợp này, "âm nhạc đương đại" thường được dùng để chỉ các xu hướng âm nhạc hiện hành, phổ biến ở thời điểm hiện tại.</li>
+                        <li>Nó bao gồm nhiều thể loại nhạc đại chúng như pop, rock, hip-hop, R&B, electronic dance music (EDM),... và các thể loại đang thịnh hành khác.</li>
+                        <li>Đặc điểm của âm nhạc đương đại phổ thông là sự đa dạng, không ngừng thay đổi và chịu ảnh hưởng mạnh mẽ của công nghệ, văn hóa đại chúng và thị hiếu khán giả.</li>
+                        <li>Nó thường kết hợp nhiều yếu tố âm nhạc khác nhau và có thể phản ánh các vấn đề xã hội, chính trị và văn hóa đương thời.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="artists" class="artists-section">
+            <h2>Nghệ Sĩ Tiêu Biểu</h2>
+            <p>Âm nhạc đương đại Việt Nam có nhiều gương mặt nổi bật, mỗi người đều có phong cách riêng và đóng góp đáng kể vào nền âm nhạc nước nhà.</p>
+  
+            <div class="artists-container">
+                <div class="artist-card">
+                    <div class="artist-img artist-img-1">
+                       
+                        <div class="artist-name">Trịnh Công Sơn</div>
+                        
+                    </div>
+                    <div class="artist-info">
+                        <div class="artist-title">Huyền thoại nhạc Trịnh (Nhạc trữ tình, nhạc phản chiến)</div>
+                        <p class="artist-desc">Sinh năm 1939, mất năm 2001. Là nhạc sĩ, ca sĩ, nhà thơ – một trong những biểu tượng văn hóa lớn nhất của Việt Nam thế kỷ 20. Phong cách âm nhạc trữ tình sâu sắc, giàu tính triết lý, nhân văn, phản chiến.</p>
+                        <div class="artist-works">
+                            <span>Diễm xưa</span>
+                            <span>Cát bụi</span>
+                            <span>Hạ trắng</span>
+                            <span>Nối vòng tay lớn</span>
+                        </div>
+                    </div>
+                </div>
+              
+                <div class="artist-card">
+                    <div class="artist-img artist-img-2">
+                        <div class="artist-name">Mỹ Tâm</div>
+                    </div>
+                    <div class="artist-info">
+                        <div class="artist-title">"Họa mi tóc nâu" (Nhạc pop, ballad)</div>
+                        <p class="artist-desc">Sinh năm 1981, thành công từ những năm 2000 đến nay. Là một trong những nghệ sĩ nữ có lượng fan đông đảo nhất Việt Nam. Phong cách âm nhạc Pop ballad kết hợp R&B, soul, gần đây là EDM.</p>
+                        <div class="artist-works">
+                            <span>Ước gì</span>
+                            <span>Họa mi tóc nâu</span>
+                            <span>Đúng cũng thành sai</span>
+                            <span>Người hãy quên em đi</span>
+                        </div>
+                    </div>
+                </div>
+              
+                <div class="artist-card">
+                   
+                    <div class="img">
+                        
+                        <div class="artist-name">Sơn Tùng M-TP</div>
+                        
+                    </div>
+                    <div class="artist-info">
+                        <div class="artist-title">Biểu tượng của thế hệ Gen Z (Pop, EDM, R&B, Hip-hop)</div>
+                        <p class="artist-desc">Sinh năm 1994, nổi lên từ 2012. Là ca sĩ – nhạc sĩ – nhà sản xuất âm nhạc. Sở hữu nhiều bản hit triệu view. Phong cách âm nhạc Pop hiện đại pha EDM, R&B.</p>
+                        <div class="artist-works">
+                            <span>Em của ngày hôm qua</span>
+                            <span>Lạc trôi</span>
+                            <span>Chạy ngay đi</span>
+                            <span>Hãy trao cho anh</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="fusion" class="fusion-section">
+            <h2>Sự Kết Hợp Giữa Các Thể Loại</h2>
+            
+            <div class="fusion-container">
+                <h3>Hybrid Genres & Fusion</h3>
+                <p>Hybrid Genres (Thể loại lai) chỉ những thể loại âm nhạc được hình thành từ việc pha trộn các yếu tố của hai hoặc nhiều thể loại khác nhau. Fusion (Hòa trộn/Kết hợp) thường được sử dụng để chỉ sự kết hợp có ý thức và rõ rệt giữa các thể loại, đôi khi mang tính thử nghiệm cao hoặc kết hợp các yếu tố văn hóa âm nhạc khác nhau.</p>
+                
+                <p>Đặc điểm của sự kết hợp thể loại:</p>
+                <ul>
+                    <li>Tính đa dạng: Các yếu tố từ các thể loại khác nhau được kết hợp một cách sáng tạo, từ hòa âm, giai điệu, nhịp điệu đến cách sử dụng nhạc cụ và kỹ thuật sản xuất.</li>
+                    <li>Sự đổi mới: Mục tiêu thường là tạo ra một âm thanh mới lạ, vượt ra ngoài những khuôn khổ đã có của các thể loại gốc.</li>
+                    <li>Phản ánh văn hóa: Nhiều thể loại fusion ra đời từ sự giao thoa giữa các nền văn hóa âm nhạc khác nhau, thể hiện sự phong phú và đa dạng của âm nhạc thế giới.</li>
+                </ul>
+                
+                <p>Ví dụ về các thể loại Hybrid/Fusion:</p>
+                <ul>
+                    <li>Rock and Roll: Một trong những ví dụ điển hình đầu tiên của fusion, kết hợp giữa blues, gospel, country và R&B.</li>
+                    <li>Jazz Fusion: Hòa trộn giữa jazz với rock, funk, và đôi khi cả các yếu tố điện tử và âm nhạc thế giới.</li>
+                    <li>World Music Fusion: Kết hợp âm nhạc truyền thống từ các nền văn hóa khác nhau với các thể loại đương đại như pop, rock hoặc electronic.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="technology" class="technology-section">
+            <h2>Ảnh Hưởng Công Nghệ</h2>
+            <p>Công nghệ đã và đang tạo ra những thay đổi mang tính cách mạng trong cách chúng ta sáng tạo, phân phối và tiêu thụ âm nhạc.</p>
+            
+            <div class="tech-container">
+                <div class="tech-card">
+                    <h3>Âm nhạc điện tử</h3>
+                    <ul>
+                        <li>Sự ra đời của các thể loại mới: Công nghệ điện tử đã mở ra một thế giới âm thanh hoàn toàn mới, dẫn đến sự hình thành và phát triển của vô số các thể loại âm nhạc điện tử (EDM).</li>
+                        <li>Thay đổi cách sáng tạo và biểu diễn: Nhạc cụ điện tử như synthesizer, sampler, drum machine và các phần mềm sản xuất âm nhạc đã trở thành những công cụ mạnh mẽ.</li>
+                        <li>Ảnh hưởng đến các thể loại khác: Các yếu tố của âm nhạc điện tử ngày càng được tích hợp vào nhiều thể loại âm nhạc khác.</li>
+                    </ul>
+                </div>
+                
+                <div class="tech-card">
+                    <h3>Phần mềm sản xuất âm nhạc</h3>
+                    <ul>
+                        <li>Dân chủ hóa quá trình sản xuất: Các phần mềm thu âm, chỉnh sửa, phối khí (DAWs) ngày càng trở nên mạnh mẽ và dễ tiếp cận hơn.</li>
+                        <li>Mở rộng khả năng sáng tạo: Phần mềm cung cấp vô số công cụ và hiệu ứng âm thanh, cho phép các nhà sản xuất thử nghiệm những ý tưởng âm nhạc phức tạp.</li>
+                        <li>Hợp tác từ xa: Internet và các phần mềm cộng tác trực tuyến giúp các nhạc sĩ và nhà sản xuất có thể làm việc cùng nhau từ bất kỳ đâu trên thế giới.</li>
+                    </ul>
+                </div>
+                
+                <div class="tech-card">
+                    <h3>Streaming</h3>
+                    <ul>
+                        <li>Thay đổi cách tiếp cận và tiêu thụ âm nhạc: Các nền tảng streaming như Spotify, Apple Music, YouTube Music đã thay đổi hoàn toàn cách công chúng khám phá, nghe và sở hữu âm nhạc.</li>
+                        <li>Tác động đến doanh thu và mô hình kinh doanh âm nhạc: Streaming đã trở thành nguồn doanh thu chính cho ngành công nghiệp âm nhạc.</li>
+                        <li>Dân chủ hóa việc phân phối âm nhạc: Các nghệ sĩ độc lập có thể dễ dàng đưa âm nhạc của mình lên các nền tảng streaming và tiếp cận khán giả toàn cầu.</li>
+                        <li>Tạo ra các thuật toán khám phá âm nhạc: Các nền tảng streaming sử dụng thuật toán để gợi ý nhạc mới cho người nghe dựa trên sở thích và lịch sử nghe nhạc của họ.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="global" class="global-section">
+            <h2>Sự Phát Triển Của Âm Nhạc Toàn Cầu</h2>
+            <p>Trong thời đại toàn cầu hóa, các thể loại âm nhạc từ khắp nơi trên thế giới đã vượt ra khỏi biên giới quốc gia và trở thành hiện tượng toàn cầu.</p>
+            
+            <div class="global-music">
+                <div class="music-types">
+                    <div class="music-type">
+                        <h3>K-pop</h3>
+                        <p>Từ một thể loại âm nhạc chủ yếu phổ biến ở Hàn Quốc, K-pop đã vươn lên trở thành một hiện tượng văn hóa toàn cầu với lượng người hâm mộ khổng lồ trên khắp thế giới. Các nhóm nhạc như BTS, BLACKPINK, Stray Kids, NewJeans... đã phá vỡ các bảng xếp hạng âm nhạc quốc tế.</p>
+                        <p>K-pop không chỉ là âm nhạc mà còn lan tỏa văn hóa Hàn Quốc (Hallyu - Làn sóng Hàn Quốc) ra toàn thế giới, từ ẩm thực, thời trang, ngôn ngữ đến du lịch.</p>
+                    </div>
+                    
+                    <div class="music-type">
+                        <h3>Latin Pop</h3>
+                        <p>Nhạc Latin không chỉ phổ biến trong cộng đồng nói tiếng Tây Ban Nha mà còn lan rộng ra toàn cầu, ảnh hưởng đến phong cách âm nhạc, vũ đạo và cả ngôn ngữ trong âm nhạc đại chúng. Các bản hit tiếng Tây Ban Nha thường xuyên lọt vào top các bảng xếp hạng quốc tế.</p>
+                        <p>Latin Pop thường xuyên kết hợp với các thể loại pop, hip hop, electronic, tạo ra những bản nhạc crossover thành công, thu hút lượng khán giả lớn hơn.</p>
+                    </div>
+                    
+                    <div class="music-type">
+                        <h3>Afrobeats</h3>
+                        <p>Afrobeats, với nguồn gốc từ Tây Phi (đặc biệt là Nigeria và Ghana), đã trở thành một trong những thể loại âm nhạc có sức ảnh hưởng lớn nhất trên toàn cầu trong những năm gần đây. Các nghệ sĩ như Burna Boy, Wizkid, Davido, Tiwa Savage đã đưa âm nhạc châu Phi lên bản đồ âm nhạc thế giới.</p>
+                        <p>Sự thành công của Afrobeats đã góp phần quảng bá văn hóa, ngôn ngữ và tinh thần của châu Phi đến với thế giới.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="social" class="social-section">
+            <h2>Vai Trò Xã Hội Của Các Nền Tảng Trực Tuyến</h2>
+            
+            <div class="social-role">
+                <p>Các nền tảng trực tuyến đã thay đổi hoàn toàn cách chúng ta tiếp cận, chia sẻ và tương tác với âm nhạc, đồng thời tạo ra những tác động xã hội sâu rộng.</p>
+                
+                <h3>Dân chủ hóa sự tham gia</h3>
+                <p>Bất kỳ ai có kết nối internet đều có thể nghe nhạc, chia sẻ và tương tác với cộng đồng yêu nhạc trực tuyến.</p>
+                
+                <h3>Thay đổi phương thức phân phối và quảng bá âm nhạc</h3>
+                <p>Các nghệ sĩ, đặc biệt là những nghệ sĩ độc lập, có thể dễ dàng đưa âm nhạc của mình lên các nền tảng trực tuyến và tiếp cận khán giả trên toàn thế giới mà không cần thông qua các hãng thu âm truyền thống.</p>
+                <p>Mạng xã hội và các nền tảng chia sẻ video trở thành những công cụ mạnh mẽ để nghệ sĩ quảng bá sản phẩm âm nhạc, tương tác với người hâm mộ và xây dựng cộng đồng trực tuyến.</p>
+                
+                <h3>Tác động đến mô hình kinh doanh âm nhạc</h3>
+                <p>Streaming đã trở thành nguồn doanh thu chính cho ngành công nghiệp âm nhạc, thay thế dần doanh số bán đĩa vật lý và tải nhạc kỹ thuật số.</p>
+                <p>Các nền tảng trực tuyến cung cấp cơ hội kiếm tiền cho các nghệ sĩ độc lập thông qua lượt nghe, quảng cáo và bán hàng hóa trực tiếp cho người hâm mộ.</p>
+                
+                <h3>Tạo ra cộng đồng và tương tác</h3>
+                <p>Các nền tảng trực tuyến cho phép nghệ sĩ tương tác trực tiếp với người hâm mộ thông qua bình luận, livestream, Q&A... xây dựng mối quan hệ gần gũi hơn.</p>
+                <p>Các diễn đàn, nhóm trên mạng xã hội và các nền tảng dành riêng cho âm nhạc tạo ra cộng đồng những người yêu nhạc có chung sở thích, nơi họ có thể chia sẻ, thảo luận và khám phá âm nhạc cùng nhau.</p>
+            </div>
+        </section>
+
+        <!-- NEW SECTIONS START HERE -->
+
+        <section id="playlists" class="playlist-section">
+            <h2>Playlist Nhạc Theo Thể Loại và Nghệ Sĩ</h2>
+            <p>Khám phá các bộ sưu tập âm nhạc đa dạng, được tuyển chọn kỹ lưỡng theo thể loại, nghệ sĩ và tâm trạng.</p>
+            
+            <div class="playlist-tabs">
+                <button class="playlist-tab active" data-tab="tab1">Top Hits Việt Nam</button>
+                <button class="playlist-tab" data-tab="tab2">Nhạc Theo Tâm Trạng</button>
+                <button class="playlist-tab" data-tab="tab3">Nghệ Sĩ Nổi Bật</button>
+                <button class="playlist-tab" data-tab="tab4">Xu Hướng Mới</button>
+            </div>
+            
+            <div class="playlist-content active" id="tab1">
+                <div class="playlist-grid">
+                    <div class="playlist-item">
+                        <div class="playlist-cover" style="background-image: url('/placeholder.svg?height=300&width=300');">
+                            <div class="playlist-play">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="playlist-info">
+                            <div class="playlist-title">Top 100 Nhạc Trẻ Hay Nhất</div>
+                            <div class="playlist-source">
+                                <i class="fas fa-music"></i> Zing MP3
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="playlist-item">
+                        <div class="playlist-cover" style="background-image: url('/placeholder.svg?height=300&width=300');">
+                            <div class="playlist-play">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="playlist-info">
+                            <div class="playlist-title">VPOP 2025 – Nhạc Việt Top Hits</div>
+                            <div class="playlist-source">
+                                <i class="fab fa-spotify"></i> Spotify
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="playlist-item">
+                        <div class="playlist-cover" style="background-image: url('/placeholder.svg?height=300&width=300');">
+                            <div class="playlist-play">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="playlist-info">
+                            <div class="playlist-title">Quang Hùng MasterD - Best Hits</div>
+                            <div class="playlist-source">
+                                <i class="fab fa-youtube"></i> YouTube Music
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="playlist-item">
+                        <div class="playlist-cover" style="background-image: url('/placeholder.svg?height=300&width=300');">
+                            <div class="playlist-play">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="playlist-info">
+                            <div class="playlist-title">Tăng Duy Tân - Collection</div>
+                            <div class="playlist-source">
+                                <i class="fas fa-music"></i> Zing MP3
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="playlist-content" id="tab2">
+                <div class="playlist-grid">
+                    <div class="playlist-item">
+                        <div class="playlist-cover" style="background-image: url('/placeholder.svg?height=300&width=300');">
+                            <div class="playlist-play">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="playlist-info">
+                            <div class="playlist-title">Nhạc Buồn Thất Tình</div>
+                            <div class="playlist-source">
+                                <i class="fas fa-heart-broken"></i> Coolmate
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="playlist-item">
+                        <div class="playlist-cover" style="background-image: url('/placeholder.svg?height=300&width=300');">
+                            <div class="playlist-play">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="playlist-info">
+                            <div class="playlist-title">Chill & Relax</div>
+                            <div class="playlist-source">
+                                <i class="fab fa-spotify"></i> Spotify
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="playlist-item">
+                        <div class="playlist-cover" style="background-image: url('/placeholder.svg?height=300&width=300');">
+                            <div class="playlist-play">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="playlist-info">
+                            <div class="playlist-title">Tâm Trạng Cô Đơn</div>
+                            <div class="playlist-source">
+                                <i class="fas fa-music"></i> Zing MP3
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="playlist-item">
+                        <div class="playlist-cover" style="background-image: url('/placeholder.svg?height=300&width=300');">
+                            <div class="playlist-play">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="playlist-info">
+                            <div class="playlist-title">Năng Lượng Tích Cực</div>
+                            <div class="playlist-source">
+                                <i class="fab fa-youtube"></i> YouTube Music
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="playlist-content" id="tab3">
+                <!-- Content for tab 3 -->
+                <div class="playlist-grid">
+                    <div class="playlist-item">
+                        <div class="playlist-cover" style="background-image: url('/placeholder.svg?height=300&width=300');">
+                            <div class="playlist-play">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="playlist-info">
+                            <div class="playlist-title">Tùng Dương - Tinh Hoa</div>
+                            <div class="playlist-source">
+                                <i class="fas fa-music"></i> Zing MP3
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="playlist-item">
+                        <div class="playlist-cover" style="background-image: url('/placeholder.svg?height=300&width=300');">
+                            <div class="playlist-play">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="playlist-info">
+                            <div class="playlist-title">Dương Domic - Best Of</div>
+                            <div class="playlist-source">
+                                <i class="fab fa-spotify"></i> Spotify
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="playlist-item">
+                        <div class="playlist-cover" style="background-image: url('/placeholder.svg?height=300&width=300');">
+                            <div class="playlist-play">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="playlist-info">
+                            <div class="playlist-title">Sơn Tùng M-TP - Collection</div>
+                            <div class="playlist-source">
+                                <i class="fab fa-youtube"></i> YouTube Music
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="playlist-item">
+                        <div class="playlist-cover" style="background-image: url('/placeholder.svg?height=300&width=300');">
+                            <div class="playlist-play">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="playlist-info">
+                            <div class="playlist-title">Mỹ Tâm - Những Bản Hit</div>
+                            <div class="playlist-source">
+                                <i class="fas fa-music"></i> Zing MP3
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="playlist-content" id="tab4">
+                <!-- Content for tab 4 -->
+                <div class="playlist-grid">
+                    <div class="playlist-item">
+                        <div class="playlist-cover" style="background-image: url('/placeholder.svg?height=300&width=300');">
+                            <div class="playlist-play">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="playlist-info">
+                            <div class="playlist-title">Xu Hướng TikTok 2025</div>
+                            <div class="playlist-source">
+                                <i class="fab fa-tiktok"></i> TikTok
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="playlist-item">
+                        <div class="playlist-cover" style="background-image: url('/placeholder.svg?height=300&width=300');">
+                            <div class="playlist-play">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="playlist-info">
+                            <div class="playlist-title">Nhạc Indie Việt Mới Nhất</div>
+                            <div class="playlist-source">
+                                <i class="fab fa-spotify"></i> Spotify
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="playlist-item">
+                        <div class="playlist-cover" style="background-image: url('/placeholder.svg?height=300&width=300');">
+                            <div class="playlist-play">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="playlist-info">
+                            <div class="playlist-title">Rap Việt Underground</div>
+                            <div class="playlist-source">
+                                <i class="fab fa-soundcloud"></i> SoundCloud
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="playlist-item">
+                        <div class="playlist-cover" style="background-image: url('/placeholder.svg?height=300&width=300');">
+                            <div class="playlist-play">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="playlist-info">
+                            <div class="playlist-title">EDM Việt - Rising Stars</div>
+                            <div class="playlist-source">
+                                <i class="fas fa-music"></i> Zing MP3
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="charts" class="charts-section">
+            <h2>Bảng Xếp Hạng Âm Nhạc</h2>
+            <p>Cập nhật các bảng xếp hạng âm nhạc uy tín, phản ánh xu hướng nghe nhạc của khán giả Việt Nam và quốc tế.</p>
+            
+            <div class="chart-container">
+                <div class="chart-header">
+                    <div class="chart-title">#ZingChart 2025</div>
+                    <div class="chart-source">Nguồn: Zing MP3</div>
+                </div>
+                
+                <ul class="chart-list">
+                    <li class="chart-item">
+                        <div class="chart-rank">01</div>
+                        <div class="chart-song-info">
+                            <div class="chart-song-title">Tên bài hát #1</div>
+                            <div class="chart-song-artist">Nghệ sĩ A</div>
+                        </div>
+                        <div class="chart-song-trend trend-up">
+                            <i class="fas fa-arrow-up"></i>
+                        </div>
+                    </li>
+                    
+                    <li class="chart-item">
+                        <div class="chart-rank">02</div>
+                        <div class="chart-song-info">
+                            <div class="chart-song-title">Tên bài hát #2</div>
+                            <div class="chart-song-artist">Nghệ sĩ B</div>
+                        </div>
+                        <div class="chart-song-trend trend-same">
+                            <i class="fas fa-minus"></i>
+                        </div>
+                    </li>
+                    
+                    <li class="chart-item">
+                        <div class="chart-rank">03</div>
+                        <div class="chart-song-info">
+                            <div class="chart-song-title">Tên bài hát #3</div>
+                            <div class="chart-song-artist">Nghệ sĩ C</div>
+                        </div>
+                        <div class="chart-song-trend trend-up">
+                            <i class="fas fa-arrow-up"></i>
+                        </div>
+                    </li>
+                    
+                    <li class="chart-item">
+                        <div class="chart-rank">04</div>
+                        <div class="chart-song-info">
+                            <div class="chart-song-title">Tên bài hát #4</div>
+                            <div class="chart-song-artist">Nghệ sĩ D</div>
+                        </div>
+                        <div class="chart-song-trend trend-down">
+                            <i class="fas fa-arrow-down"></i>
+                        </div>
+                    </li>
+                    
+                    <li class="chart-item">
+                        <div class="chart-rank">05</div>
+                        <div class="chart-song-info">
+                            <div class="chart-song-title">Tên bài hát #5</div>
+                            <div class="chart-song-artist">Nghệ sĩ E</div>
+                        </div>
+                        <div class="chart-song-trend trend-up">
+                            <i class="fas fa-arrow-up"></i>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="chart-container" style="margin-top: 30px;">
+                <div class="chart-header">
+                    <div class="chart-title">Billboard Vietnam HOT 100</div>
+                    <div class="chart-source">Nguồn: Billboard Vietnam</div>
+                </div>
+                
+                <ul class="chart-list">
+                    <li class="chart-item">
+                        <div class="chart-rank">01</div>
+                        <div class="chart-song-info">
+                            <div class="chart-song-title">Tên bài hát #1</div>
+                            <div class="chart-song-artist">Nghệ sĩ X</div>
+                        </div>
+                        <div class="chart-song-trend trend-up">
+                            <i class="fas fa-arrow-up"></i>
+                        </div>
+                    </li>
+                    
+                    <li class="chart-item">
+                        <div class="chart-rank">02</div>
+                        <div class="chart-song-info">
+                            <div class="chart-song-title">Tên bài hát #2</div>
+                            <div class="chart-song-artist">Nghệ sĩ Y</div>
+                        </div>
+                        <div class="chart-song-trend trend-down">
+                            <i class="fas fa-arrow-down"></i>
+                        </div>
+                    </li>
+                    
+                    <li class="chart-item">
+                        <div class="chart-rank">03</div>
+                        <div class="chart-song-info">
+                            <div class="chart-song-title">Tên bài hát #3</div>
+                            <div class="chart-song-artist">Nghệ sĩ Z</div>
+                        </div>
+                        <div class="chart-song-trend trend-same">
+                            <i class="fas fa-minus"></i>
+                        </div>
+                    </li>
+                    
+                    <li class="chart-item">
+                        <div class="chart-rank">04</div>
+                        <div class="chart-song-info">
+                            <div class="chart-song-title">Tên bài hát #4</div>
+                            <div class="chart-song-artist">Nghệ sĩ W</div>
+                        </div>
+                        <div class="chart-song-trend trend-up">
+                            <i class="fas fa-arrow-up"></i>
+                        </div>
+                    </li>
+                    
+                    <li class="chart-item">
+                        <div class="chart-rank">05</div>
+                        <div class="chart-song-info">
+                            <div class="chart-song-title">Tên bài hát #5</div>
+                            <div class="chart-song-artist">Nghệ sĩ V</div>
+                        </div>
+                        <div class="chart-song-trend trend-up">
+                            <i class="fas fa-arrow-up"></i>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="news-section">
+            <h2>Tin Tức Âm Nhạc</h2>
+            <p>Cập nhật các sự kiện âm nhạc, album mới và thông tin về nghệ sĩ trong và ngoài nước.</p>
+            
+            <div class="news-grid">
+                <div class="news-card">
+                    <div class="news-img" style="background-image: url('/placeholder.svg?height=400&width=600');"></div>
+                    <div class="news-content">
+                        <div class="news-date">15/04/2025</div>
+                        <div class="news-title">Album mới của nghệ sĩ A phá vỡ kỷ lục streaming</div>
+                        <div class="news-excerpt">Album mới nhất của nghệ sĩ A đã phá vỡ kỷ lục streaming trong ngày đầu phát hành với hơn 1 triệu lượt nghe...</div>
+                        <div class="news-source">
+                            <i class="fas fa-newspaper"></i> VnExpress Giải trí
+                        </div>
+                        <a href="#" class="news-read-more">Đọc tiếp <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+                
+                <div class="news-card">
+                    <div class="news-img" style="background-image: url('/placeholder.svg?height=400&width=600');"></div>
+                    <div class="news-content">
+                        <div class="news-date">12/04/2025</div>
+                        <div class="news-title">Lễ hội âm nhạc quốc tế sắp diễn ra tại Hà Nội</div>
+                        <div class="news-excerpt">Lễ hội âm nhạc quốc tế với sự tham gia của nhiều nghệ sĩ nổi tiếng trong và ngoài nước sẽ diễn ra vào tháng 6 tới...</div>
+                        <div class="news-source">
+                            <i class="fas fa-newspaper"></i> Báo Mới
+                        </div>
+                        <a href="#" class="news-read-more">Đọc tiếp <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+                
+                <div class="news-card">
+                    <div class="news-img" style="background-image: url('/placeholder.svg?height=400&width=600');"></div>
+                    <div class="news-content">
+                        <div class="news-date">10/04/2025</div>
+                        <div class="news-title">Nghệ sĩ B giành giải thưởng âm nhạc quốc tế</div>
+                        <div class="news-excerpt">Nghệ sĩ B đã xuất sắc giành giải thưởng âm nhạc quốc tế danh giá, đánh dấu bước tiến quan trọng trong sự nghiệp...</div>
+                        <div class="news-source">
+                            <i class="fas fa-newspaper"></i> VnExpress Giải trí
+                        </div>
+                        <a href="#" class="news-read-more">Đọc tiếp <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="interview-section">
+            <h2>Phỏng Vấn Nghệ Sĩ</h2>
+            <p>Khám phá góc nhìn và trải nghiệm của các nghệ sĩ trong ngành âm nhạc.</p>
+            
+            <div class="interview-container">
+                <div class="interview-video">
+                    <!-- Placeholder for YouTube embed -->
+                    <iframe src="about:blank" title="Phỏng vấn nghệ sĩ dàn nhạc giao hưởng Việt Nam" allowfullscreen></iframe>
+                </div>
+                <div class="interview-info">
+                    <div class="interview-title">Phỏng vấn nghệ sĩ dàn nhạc giao hưởng Việt Nam</div>
+                    <div class="interview-desc">Cuộc phỏng vấn độc quyền với các nghệ sĩ trong dàn nhạc giao hưởng Việt Nam, chia sẻ về hành trình âm nhạc, những thách thức và niềm đam mê với âm nhạc cổ điển.</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="reviews-section">
+            <h2>Đánh Giá Album, Bài Hát</h2>
+            <p>Phân tích chuyên sâu về các album và bài hát nổi bật trong làng nhạc Việt.</p>
+            
+            <div class="reviews-container">
+                <div class="review-card">
+                    <div class="review-header">
+                        <div class="review-title">Year in Review: Nhạc Việt 2024</div>
+                        <div class="review-meta">
+                            <div class="review-source">Nguồn: Tạp chí Âm nhạc</div>
+                            <div class="review-rating">
+                                <div class="review-stars">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star-half-alt"></i>
+                                </div>
+                                4.5/5
+                            </div>
+                        </div>
+                    </div>
+                    <div class="review-content">
+                        <div class="review-text">Năm 2024 chứng kiến sự phát triển mạnh mẽ của làng nhạc Việt với nhiều xu hướng mới và sự kết hợp đa dạng giữa các thể loại. Các nghệ sĩ trẻ tiếp tục khẳng định vị thế với những sản phẩm chất lượng cao...</div>
+                        <a href="#" class="review-read-more">Đọc tiếp <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+                
+                <div class="review-card">
+                    <div class="review-header">
+                        <div class="review-title">10 album nhạc Việt tạo dấu ấn mạnh mẽ trong 2024</div>
+                        <div class="review-meta">
+                            <div class="review-source">Nguồn: Elle Man</div>
+                            <div class="review-rating">
+                                <div class="review-stars">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                </div>
+                                4/5
+                            </div>
+                        </div>
+                    </div>
+                    <div class="review-content">
+                        <div class="review-text">Danh sách 10 album nhạc Việt xuất sắc nhất năm 2024, được đánh giá cao về chất lượng âm nhạc, sáng tạo trong cách thể hiện và sự đầu tư chỉn chu. Các album này không chỉ thành công về mặt thương mại mà còn nhận được sự đánh giá cao từ giới phê bình...</div>
+                        <a href="#" class="review-read-more">Đọc tiếp <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="forum-section">
+            <h2>Diễn Đàn và Khu Vực Bình Luận</h2>
+            <p>Tham gia thảo luận và chia sẻ sở thích âm nhạc với cộng đồng yêu nhạc.</p>
+            
+            <div class="forum-container">
+                <div class="forum-header">
+                    <div class="forum-title">VNAV – Mạng Nghe nhìn Việt Nam</div>
+                    <button class="forum-button">Tham gia ngay</button>
+                </div>
+                
+                <ul class="forum-topics">
+                    <li class="forum-topic">
+                        <div class="topic-header">
+                            <div class="topic-title">Thảo luận về album mới của nghệ sĩ X</div>
+                            <div class="topic-meta">
+                                <span class="topic-author">Bởi: user123</span>
+                                <span class="topic-date">15/04/2025</span>
+                            </div>
+                        </div>
+                        <div class="topic-preview">Album mới của nghệ sĩ X thực sự là một bước đột phá trong sự nghiệp. Tôi đặc biệt ấn tượng với track số 3...</div>
+                    </li>
+                    
+                    <li class="forum-topic">
+                        <div class="topic-header">
+                            <div class="topic-title">Xu hướng âm nhạc Việt Nam 2025</div>
+                            <div class="topic-meta">
+                                <span class="topic-author">Bởi: musiclover</span>
+                                <span class="topic-date">12/04/2025</span>
+                            </div>
+                        </div>
+                        <div class="topic-preview">Các bạn nghĩ xu hướng âm nhạc Việt Nam năm 2025 sẽ như thế nào? Tôi thấy có sự kết hợp ngày càng nhiều giữa âm nhạc truyền thống và hiện đại, đặc biệt là trong các sản phẩm của các nghệ sĩ trẻ...</div>
+                    </li>
+                    
+                    <li class="forum-topic">
+                        <div class="topic-header">
+                            <div class="topic-title">Chia sẻ playlist nhạc học tập</div>
+                            <div class="topic-meta">
+                                <span class="topic-author">Bởi: student2025</span>
+                                <span class="topic-date">10/04/2025</span>
+                            </div>
+                        </div>
+                        <div class="topic-preview">Mình muốn chia sẻ playlist nhạc học tập hiệu quả mà mình đã tổng hợp. Playlist này gồm các bản nhạc không lời, giúp tập trung...</div>
+                    </li>
+                </ul>
+                
+                <div class="forum-more">
+                    <a href="#" class="forum-more-link">Xem thêm chủ đề <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+            
+            <div class="forum-container" style="margin-top: 30px;">
+                <div class="forum-header">
+                    <div class="forum-title">Diễn Đàn Âm nhạc Việt Nam</div>
+                    <button class="forum-button">Tham gia ngay</button>
+                </div>
+                
+                <ul class="forum-topics">
+                    <li class="forum-topic">
+                        <div class="topic-header">
+                            <div class="topic-title">Thảo luận về nhạc cổ điển Việt Nam</div>
+                            <div class="topic-meta">
+                                <span class="topic-author">Bởi: classical_lover</span>
+                                <span class="topic-date">14/04/2025</span>
+                            </div>
+                        </div>
+                        <div class="topic-preview">Tôi muốn tìm hiểu thêm về nhạc cổ điển Việt Nam. Có ai có thể giới thiệu một số tác phẩm tiêu biểu và nghệ sĩ nổi bật không?</div>
+                    </li>
+                    
+                    <li class="forum-topic">
+                        <div class="topic-header">
+                            <div class="topic-title">Góc nhìn về làn sóng K-pop tại Việt Nam</div>
+                            <div class="topic-meta">
+                                <span class="topic-author">Bởi: music_critic</span>
+                                <span class="topic-date">11/04/2025</span>
+                            </div>
+                        </div>
+                        <div class="topic-preview">Làn sóng K-pop đang ngày càng ảnh hưởng mạnh mẽ đến thị trường âm nhạc Việt Nam. Các bạn nghĩ điều này tác động như thế nào đến nền âm nhạc nước nhà?</div>
+                    </li>
+                </ul>
+                
+                <div class="forum-more">
+                    <a href="#" class="forum-more-link">Xem thêm chủ đề <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </section>
+
+        <section id="quiz" class="quiz-section">
+            <h2>Trắc Nghiệm Âm Nhạc</h2>
+            <p>Kiểm tra kiến thức âm nhạc của bạn với các câu hỏi trắc nghiệm thú vị.</p>
+            
+            <div class="quiz-container">
+                <div class="quiz-header">
+                    <div class="quiz-title">Trắc Nghiệm Âm nhạc 12 - Kết nối tri thức</div>
+                    <div class="quiz-description">Bộ câu hỏi trắc nghiệm giúp học sinh kiểm tra và củng cố kiến thức âm nhạc.</div>
+                </div>
+                
+                <div class="quiz-question" id="question1">
+                    <div class="question-text">1. Âm nhạc đương đại trong bối cảnh âm nhạc cổ điển thường được xem là bắt đầu từ thời kỳ nào?</div>
+                    <ul class="quiz-options">
+                        <li class="quiz-option" data-correct="true">Cuối thế kỷ 20 đến nay</li>
+                        <li class="quiz-option">Đầu thế kỷ 19</li>
+                        <li class="quiz-option">Giữa thế kỷ 18</li>
+                        <li class="quiz-option">Đầu thế kỷ 17</li>
+                    </ul>
+                </div>
+                
+                <div class="quiz-question" id="question2" style="display: none;">
+                    <div class="question-text">2. Nhạc sĩ nào được mệnh danh là "Huyền thoại nhạc Trịnh"?</div>
+                    <ul class="quiz-options">
+                        <li class="quiz-option">Văn Cao</li>
+                        <li class="quiz-option" data-correct="true">Trịnh Công Sơn</li>
+                        <li class="quiz-option">Phạm Duy</li>
+                        <li class="quiz-option">Văn Phụng</li>
+                    </ul>
+                </div>
+                
+                <div class="quiz-question" id="question3" style="display: none;">
+                    <div class="question-text">3. Thể loại âm nhạc nào có nguồn gốc từ Tây Phi và đang có ảnh hưởng lớn trên toàn cầu?</div>
+                    <ul class="quiz-options">
+                        <li class="quiz-option">K-pop</li>
+                        <li class="quiz-option">Latin Pop</li>
+                        <li class="quiz-option" data-correct="true">Afrobeats</li>
+                        <li class="quiz-option">Reggaeton</li>
+                    </ul>
+                </div>
+                
+                <div class="quiz-result" id="quizResult">
+                    <div class="result-title">Kết quả trắc nghiệm</div>
+                    <div class="result-score" id="resultScore">0/3</div>
+                    <div class="result-message" id="resultMessage">Hãy thử lại để cải thiện kết quả!</div>
+                    <button class="quiz-button" id="restartQuiz">Làm lại</button>
+                </div>
+                
+                <div class="quiz-buttons">
+                    <button class="quiz-button" id="prevQuestion" disabled>Câu trước</button>
+                    <button class="quiz-button" id="nextQuestion">Câu tiếp</button>
+                </div>
+            </div>
+            
+            <div class="quiz-container" style="margin-top: 30px;">
+                <div class="quiz-header">
+                    <div class="quiz-title">Trắc nghiệm âm nhạc tiểu học</div>
+                    <div class="quiz-description">Bộ trắc nghiệm đơn giản, sinh động, phù hợp với lứa tuổi tiểu học.</div>
+                </div>
+                
+                <div class="quiz-question">
+                    <div class="question-text">1. Đâu là nhạc cụ dân tộc của Việt Nam?</div>
+                    <ul class="quiz-options">
+                        <li class="quiz-option">Piano</li>
+                        <li class="quiz-option" data-correct="true">Đàn bầu</li>
+                        <li class="quiz-option">Guitar</li>
+                        <li class="quiz-option">Violin</li>
+                    </ul>
+                </div>
+                
+                <div class="quiz-buttons">
+                    <button class="quiz-button">Bắt đầu trắc nghiệm</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="mood-section">
+            <h2>Gợi Ý Nghe Nhạc Theo Tâm Trạng</h2>
+            <p>Khám phá các bộ sưu tập âm nhạc phù hợp với tâm trạng và hoạt động của bạn.</p>
+            
+            <div class="mood-container">
+                <div class="mood-card">
+                    <div class="mood-img" style="background-image: url('/placeholder.svg?height=300&width=400');">
+                        <div class="mood-title">Nhạc Buồn, Thất Tình</div>
+                    </div>
+                    <div class="mood-info">
+                        <div class="mood-description">Những ca khúc phù hợp với tâm trạng buồn, thất tình, giúp bạn tìm được sự đồng cảm.</div>
+                        <div class="mood-songs">31 bài hát • Nguồn: Coolmate</div>
+                    </div>
+                </div>
+                
+                <div class="mood-card">
+                    <div class="mood-img" style="background-image: url('/placeholder.svg?height=300&width=400');">
+                        <div class="mood-title">Nhạc TikTok Buồn</div>
+                    </div>
+                    <div class="mood-info">
+                        <div class="mood-description">Những ca khúc đang thịnh hành trên TikTok, phù hợp với tâm trạng cô đơn.</div>
+                        <div class="mood-songs">10 bài hát • Nguồn: Bach Hoa Xanh</div>
+                    </div>
+                </div>
+                
+                <div class="mood-card">
+                    <div class="mood-img" style="background-image: url('/placeholder.svg?height=300&width=400');">
+                        <div class="mood-title">Nhạc Tập Trung Học Tập</div>
+                    </div>
+                    <div class="mood-info">
+                        <div class="mood-description">Bộ sưu tập nhạc không lời giúp tăng cường sự tập trung khi học tập và làm việc.</div>
+                        <div class="mood-songs">25 bài hát • Nguồn: Spotify</div>
+                    </div>
+                </div>
+                
+                <div class="mood-card">
+                    <div class="mood-img" style="background-image: url('/placeholder.svg?height=300&width=400');">
+                        <div class="mood-title">Nhạc Thư Giãn</div>
+                    </div>
+                    <div class="mood-info">
+                        <div class="mood-description">Những giai điệu nhẹ nhàng, giúp thư giãn và giảm căng thẳng sau một ngày dài.</div>
+                        <div class="mood-songs">20 bài hát • Nguồn: Zing MP3</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="audio-section">
+            <h2>Trải Nghiệm Âm Nhạc</h2>
+            
+            <div class="audio-container">
+                <h3 class="audio-title">Nghe Nhạc Đương Đại</h3>
+                <audio id="audioPlayer" class="audio-player" controls>
+                    <source src="" type="audio/mpeg">
+                    Trình duyệt của bạn không hỗ trợ phát âm thanh.
+                </audio>
+                
+                <ul class="playlist" id="playlist">
+                    <li data-src=""><i class="fas fa-music playlist-icon"></i> Diễm Xưa - Trịnh Công Sơn</li>
+                    <li data-src=""><i class="fas fa-music playlist-icon"></i> Họa Mi Tóc Nâu - Mỹ Tâm</li>
+                    <li data-src=""><i class="fas fa-music playlist-icon"></i> Chạy Ngay Đi - Sơn Tùng M-TP</li>
+                    <li data-src=""><i class="fas fa-music playlist-icon"></i> Dynamite - BTS</li>
+                    <li data-src=""><i class="fas fa-music playlist-icon"></i> Despacito - Luis Fonsi</li>
+                </ul>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">Âm Nhạc Đương Đại</div>
+            
+            <ul class="footer-links">
+                <li><a href="#definition">Định Nghĩa</a></li>
+                <li><a href="#artists">Nghệ Sĩ</a></li>
+                <li><a href="#fusion">Fusion</a></li>
+                <li><a href="#technology">Công Nghệ</a></li>
+                <li><a href="#global">Toàn Cầu</a></li>
+                <li><a href="#social">Xã Hội</a></li>
+                <li><a href="#playlists">Playlists</a></li>
+                <li><a href="#charts">BXH</a></li>
+                <li><a href="#quiz">Trắc Nghiệm</a></li>
+            </ul>
+            
+            <div class="social-icons">
+                <a href="#"><i class="fab fa-facebook"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-youtube"></i></a>
+                <a href="#"><i class="fab fa-spotify"></i></a>
+            </div>
+            
+            <p class="copyright">&copy; 2025 Âm Nhạc Đương Đại. Tất cả các quyền được bảo lưu.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Create music notes
+        function createMusicNotes() {
+            const musicNotes = document.getElementById('musicNotes');
+            const notes = ['♪', '♫', '♩', '♬', '♭', '♮', '♯'];
+            const notesCount = 30;
+            
+            for (let i = 0; i < notesCount; i++) {
+                const note = document.createElement('div');
+                note.className = 'note';
+                note.textContent = notes[Math.floor(Math.random() * notes.length)];
+                note.style.left = `${Math.random() * 100}%`;
+                note.style.animationDuration = `${15 + Math.random() * 10}s`;
+                note.style.animationDelay = `${Math.random() * 5}s`;
+                note.style.fontSize = `${Math.random() * 2 + 1}rem`;
+                musicNotes.appendChild(note);
+            }
+        }
+        
+        // Scroll down function
+        document.getElementById('scrollDown').addEventListener('click', function() {
+            window.scrollTo({
+                top: window.innerHeight,
+                behavior: 'smooth'
+            });
+        });
+        
+        // Navigation scroll effect
+        window.addEventListener('scroll', function() {
+            const nav = document.getElementById('mainNav');
+            if (window.scrollY > 50) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+            
+            // Reveal sections on scroll
+            const sections = document.querySelectorAll('section');
+            sections.forEach(section => {
+                const sectionTop = section.getBoundingClientRect().top;
+                if (sectionTop < window.innerHeight - 100) {
+                    section.classList.add('visible');
+                }
+            });
+        });
+        
+        // Mobile menu toggle
+        document.getElementById('mobileMenuBtn').addEventListener('click', function() {
+            document.getElementById('navLinks').classList.toggle('active');
+        });
+        
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 70,
+                        behavior: 'smooth'
+                    });
+                    
+                    // Close mobile menu if open
+                    document.getElementById('navLinks').classList.remove('active');
+                }
+            });
+        });
+        
+        // Audio player functionality
+        const audioPlayer = document.getElementById('audioPlayer');
+        const playlist = document.getElementById('playlist');
+        const playlistItems = playlist.querySelectorAll('li');
+        
+        playlistItems.forEach(item => {
+            item.addEventListener('click', function() {
+                const src = this.getAttribute('data-src');
+                audioPlayer.src = src;
+                
+                // Remove active class from all items
+                playlistItems.forEach(i => i.classList.remove('active'));
+                
+                // Add active class to clicked item
+                this.classList.add('active');
+                
+                // Play the audio
+                audioPlayer.play().catch(e => console.log('Audio play failed:', e));
+            });
+        });
+        
+        // Playlist tabs functionality
+        const playlistTabs = document.querySelectorAll('.playlist-tab');
+        const playlistContents = document.querySelectorAll('.playlist-content');
+        
+        playlistTabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                const tabId = this.getAttribute('data-tab');
+                
+                // Remove active class from all tabs and contents
+                playlistTabs.forEach(t => t.classList.remove('active'));
+                playlistContents.forEach(c => c.classList.remove('active'));
+                
+                // Add active class to clicked tab and corresponding content
+                this.classList.add('active');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+        
+        // Quiz functionality
+        let currentQuestion = 1;
+        let score = 0;
+        const totalQuestions = 3;
+        
+        // Next question button
+        document.getElementById('nextQuestion').addEventListener('click', function() {
+            const currentQuestionEl = document.getElementById(`question${currentQuestion}`);
+            const selectedOption = currentQuestionEl.querySelector('.quiz-option.selected');
+            
+            // Check if an option is selected
+            if (selectedOption) {
+                // Check if the selected option is correct
+                if (selectedOption.getAttribute('data-correct') === 'true') {
+                    score++;
+                    selectedOption.classList.add('correct');
+                } else {
+                    selectedOption.classList.add('incorrect');
+                    // Highlight the correct answer
+                    currentQuestionEl.querySelector('.quiz-option[data-correct="true"]').classList.add('correct');
+                }
+                
+                // Disable all options
+                currentQuestionEl.querySelectorAll('.quiz-option').forEach(option => {
+                    option.style.pointerEvents = 'none';
+                });
+                
+                // If it's the last question, show the result
+                if (currentQuestion === totalQuestions) {
+                    setTimeout(() => {
+                        currentQuestionEl.style.display = 'none';
+                        document.getElementById('quizResult').style.display = 'block';
+                        document.getElementById('resultScore').textContent = `${score}/${totalQuestions}`;
+                        
+                        // Set result message based on score
+                        const resultMessage = document.getElementById('resultMessage');
+                        if (score === totalQuestions) {
+                            resultMessage.textContent = 'Tuyệt vời! Bạn đã trả lời đúng tất cả các câu hỏi.';
+                        } else if (score >= totalQuestions / 2) {
+                            resultMessage.textContent = 'Khá tốt! Bạn đã trả lời đúng hơn một nửa số câu hỏi.';
+                        } else {
+                            resultMessage.textContent = 'Hãy thử lại để cải thiện kết quả!';
+                        }
+                        
+                        document.getElementById('nextQuestion').style.display = 'none';
+                        document.getElementById('prevQuestion').style.display = 'none';
+                    }, 1000);
+                } else {
+                    // Move to the next question after a delay
+                    setTimeout(() => {
+                        currentQuestionEl.style.display = 'none';
+                        currentQuestion++;
+                        document.getElementById(`question${currentQuestion}`).style.display = 'block';
+                        document.getElementById('prevQuestion').disabled = false;
+                        
+                        if (currentQuestion === totalQuestions) {
+                            document.getElementById('nextQuestion').textContent = 'Hoàn thành';
+                        }
+                    }, 1000);
+                }
+            } else {
+                alert('Vui lòng chọn một đáp án!');
+            }
+        });
+        
+        // Previous question button
+        document.getElementById('prevQuestion').addEventListener('click', function() {
+            document.getElementById(`question${currentQuestion}`).style.display = 'none';
+            currentQuestion--;
+            document.getElementById(`question${currentQuestion}`).style.display = 'block';
+            
+            if (currentQuestion === 1) {
+                this.disabled = true;
+            }
+            
+            document.getElementById('nextQuestion').textContent = 'Câu tiếp';
+        });
+        
+        // Restart quiz button
+        document.getElementById('restartQuiz').addEventListener('click', function() {
+            // Reset quiz
+            currentQuestion = 1;
+            score = 0;
+            
+            // Hide result and show first question
+            document.getElementById('quizResult').style.display = 'none';
+            document.getElementById('question1').style.display = 'block';
+            
+            // Reset all questions
+            for (let i = 1; i <= totalQuestions; i++) {
+                const questionEl = document.getElementById(`question${i}`);
+                
+                // Reset options
+                questionEl.querySelectorAll('.quiz-option').forEach(option => {
+                    option.classList.remove('selected', 'correct', 'incorrect');
+                    option.style.pointerEvents = 'auto';
+                });
+            }
+            
+            // Reset buttons
+            document.getElementById('prevQuestion').disabled = true;
+            document.getElementById('nextQuestion').style.display = 'block';
+            document.getElementById('nextQuestion').textContent = 'Câu tiếp';
+        });
+        
+        // Select quiz option
+        document.querySelectorAll('.quiz-option').forEach(option => {
+            option.addEventListener('click', function() {
+                // Remove selected class from all options in the same question
+                const questionEl = this.closest('.quiz-question');
+                questionEl.querySelectorAll('.quiz-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                
+                // Add selected class to clicked option
+                this.classList.add('selected');
+            });
+        });
+        
+        // Initialize
+        window.addEventListener('load', function() {
+            createMusicNotes();
+            
+            // Reveal the first section
+            document.querySelector('section').classList.add('visible');
+        });
+    </script>
+</body>
+</html>
